@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
 
 import serial
 import plotly
@@ -9,7 +9,10 @@ from datetime import datetime
 
 
 plotly.tools.set_credentials_file(username="fjblau", api_key="UqWW0QabemCegQnB2mV2")
-arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+arduino = serial.Serial('/dev/cu.usbserial-DN04QYYO', 9600, timeout=.1)
+arduino.flushInput()
+arduino.flush()
+arduino.flushOutput()
 
 Lx = []
 Ly = []
@@ -18,16 +21,14 @@ for n in range (1,30):
 	time.sleep(1)
 	#print(n)
 	
-	data = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
-	print data
+	data = arduino.readline()[:-2].decode("utf-8")  #the last bit gets rid of the new-line chars
+	print (data)
 	if n > 10:
 		if data[:1]=="$":
 			ln = ln + 1
-			#for i in range (1,15):
-			#print data.split(",")[15][data.split(",")[15].find("=")+1:]
-			#print "\n"
+			
 			Lx.append(datetime.now().strftime('%H:%M:%S'))
-			Ly.append(float(data.split(",")[13][data.split(",")[13].find("=")+1:]))
+			Ly.append(float(data.split(",")[9][data.split(",")[9].find("=")+1:]))
 
 print (Lx)
 print (Ly)
