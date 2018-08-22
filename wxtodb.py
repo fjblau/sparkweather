@@ -14,7 +14,7 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-arduino = serial.Serial('/dev/cu.usbserial-DN04QYYO', 9600, timeout=.1)
+arduino = serial.Serial('COM3', 9600, timeout=.1)
 arduino.flushInput()
 arduino.flush()
 arduino.flushOutput()
