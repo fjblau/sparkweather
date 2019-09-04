@@ -1,0 +1,31 @@
+import serial
+import mysql.connector
+from time import asctime
+
+# serialconnection
+ser = serial.Serial('COM5', baudrate = 9600, timeout=1)
+
+db = mysql.connector.connect(host="172.104.235.199",  # your host 
+                             user="wx1",       # username
+                             passwd="group1",     # password
+                             db="raphaelschwärzler")   # name of the database
+
+cur = db.cursor()
+
+sec = 0
+while 1:
+    try:
+        te = ''
+        e = str(ser.readline())
+        te += asctime()
+        f = e.split(',')
+        if len(f) == 13:
+            if sec == 1:
+                cur.execute("insert into weatherstation(bar,temp,wind)\nvalue({0},{1},{2})".format(f[10],f[7],f[1]))
+                db.commit()
+                sec = 0
+            print(f) #print the aktual data
+            sec += 1
+    except:
+        db.close()
+        break
